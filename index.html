@@ -15,6 +15,7 @@
       padding: 20px;
       margin: 20px;
       border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,255,0,0.2);
     }
 
     button {
@@ -43,6 +44,12 @@
   <button onclick="withdraw()">Withdraw</button>
 </div>
 
+<div class="card">
+  <h3>Investment Plans</h3>
+  <button onclick="invest(1000)">Invest ₹1000</button>
+  <button onclick="invest(5000)">Invest ₹5000</button>
+</div>
+
 <script>
 const API = "https://demo-invest.onrender.com";
 
@@ -55,7 +62,19 @@ async function getBalance() {
 async function earn() {
   let res = await fetch(API + "/earn");
   let data = await res.json();
-  alert("Earned: ₹" + data.earning);
+
+  if(data.error){
+    alert(data.error);
+  } else {
+    alert("Earned ₹" + data.earning);
+  }
+
+  getBalance();
+}
+
+async function invest(amount) {
+  await fetch(API + "/invest?amount=" + amount);
+  alert("Invested ₹" + amount);
   getBalance();
 }
 
