@@ -49,42 +49,70 @@
 </div>
 
 <script>
-const user = prompt("Enter username");
 
-// balance
+// ✅ username save (बार बार पूछेगा नहीं)
+let user = localStorage.getItem("user");
+
+if (!user) {
+  user = prompt("Enter username");
+  localStorage.setItem("user", user);
+}
+
+// ✅ balance
 async function checkBalance() {
   const res = await fetch("https://demo-invest.onrender.com/balance?user=" + user);
   const data = await res.json();
-  document.getElementById("balance").innerText = "Balance: ₹" + data.balance;
+
+  document.getElementById("balance").innerText = "Balance: ₹" + (data.balance || 0);
 }
 
-// invest
+// ✅ invest
 async function invest(amount) {
   const res = await fetch("https://demo-invest.onrender.com/invest?user=" + user + "&amount=" + amount);
   const data = await res.json();
-  alert(data.message);
+
+  if (data.error) {
+    alert("❌ " + data.error);
+  } else {
+    alert("✅ " + data.message);
+  }
+
   checkBalance();
 }
 
-// daily earn
+// ✅ daily earn
 async function dailyEarn() {
   const res = await fetch("https://demo-invest.onrender.com/earn?user=" + user);
   const data = await res.json();
-  alert(data.message);
+
+  if (data.error) {
+    alert("❌ " + data.error);
+  } else {
+    alert("✅ " + data.message);
+  }
+
   checkBalance();
 }
 
-// withdraw
+// ✅ withdraw
 async function withdraw() {
   const res = await fetch("https://demo-invest.onrender.com/withdraw?user=" + user);
   const data = await res.json();
-  alert(data.message);
+
+  if (data.error) {
+    alert("❌ " + data.error);
+  } else {
+    alert("✅ " + data.message);
+  }
+
   checkBalance();
 }
 
+// ✅ auto load
 window.onload = function() {
   checkBalance();
 }
+
 </script>
 
 </body>
