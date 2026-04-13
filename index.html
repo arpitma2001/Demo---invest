@@ -1,49 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Demo Invest</title>
+  <title>Earn App</title>
   <style>
     body {
       font-family: Arial;
-      text-align: center;
       background: #0f172a;
       color: white;
+      text-align: center;
     }
-    h1 {
-      margin-top: 50px;
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 10px;
     }
+
     button {
       padding: 10px 20px;
-      font-size: 18px;
+      margin: 10px;
       background: #22c55e;
       border: none;
       color: white;
       border-radius: 5px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
+      font-size: 16px;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>🚀 Demo Invest</h1>
-  <p>Click button to connect backend</p>
+<h1>💰 Earn Dashboard</h1>
 
-  <button onclick="getData()">Check Backend</button>
+<div class="card">
+  <h2>Balance: ₹<span id="balance">0</span></h2>
+</div>
 
-  <div id="result"></div>
+<div class="card">
+  <button onclick="getBalance()">Check Balance</button>
+  <button onclick="earn()">Daily Earn</button>
+  <button onclick="withdraw()">Withdraw</button>
+</div>
 
-  <script>
-    async function getData() {
-      let res = await fetch("https://demo-invest.onrender.com/");
-      let data = await res.text();
-      document.getElementById("result").innerText = data;
-    }
-  </script>
+<script>
+const API = "https://demo-invest.onrender.com";
+
+async function getBalance() {
+  let res = await fetch(API + "/balance");
+  let data = await res.json();
+  document.getElementById("balance").innerText = data.balance;
+}
+
+async function earn() {
+  let res = await fetch(API + "/earn");
+  let data = await res.json();
+  alert("Earned: ₹" + data.earning);
+  getBalance();
+}
+
+async function withdraw() {
+  let res = await fetch(API + "/withdraw");
+  let data = await res.json();
+  alert(data.message);
+}
+</script>
 
 </body>
 </html>
