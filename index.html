@@ -1,9 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Earn App</title>
+</head>
+
+<body>
+
+<h2>Balance: ₹0</h2>
+
+<button onclick="checkBalance()">Check Balance</button>
+<button onclick="invest(1000)">Invest ₹1000</button>
+<button onclick="invest(5000)">Invest ₹5000</button>
+
+<!-- 🔥 SCRIPT HAMESHA BODY KE END ME -->
+<script>
+const user = "arpit";
+
+// ✅ balance function
+async function checkBalance() {
+  const res = await fetch("https://demo-invest.onrender.com/balance?user=" + user);
+  const data = await res.json();
+  document.querySelector("h2").innerText = "Balance: ₹" + data.balance;
+}
+
+// ✅ invest function
 async function invest(amount) {
-  const res = await fetch(/invest?user=${user}&amount=${amount});
+  const res = await fetch("https://demo-invest.onrender.com/invest?user=" + user + "&amount=" + amount);
   const data = await res.json();
 
   alert(data.message);
 
-  // 🔥 ye important hai
+  // 🔥 update balance
   checkBalance();
 }
+
+// ✅ auto load balance
+window.onload = function() {
+  checkBalance();
+}
+</script>
+
+</body>
+</html>
