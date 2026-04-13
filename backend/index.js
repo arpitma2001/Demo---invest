@@ -5,10 +5,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ In-memory users
 let users = {};
 
-// ✅ REGISTER
+// REGISTER
 app.get("/register", (req, res) => {
   const user = req.query.user;
 
@@ -21,10 +20,10 @@ app.get("/register", (req, res) => {
     lastEarn: ""
   };
 
-  res.json({ message: "Registered successfully", balance: users[user].balance });
+  res.json({ message: "Registered successfully" });
 });
 
-// ✅ BALANCE
+// BALANCE
 app.get("/balance", (req, res) => {
   const user = req.query.user;
 
@@ -35,7 +34,7 @@ app.get("/balance", (req, res) => {
   res.json({ balance: users[user].balance });
 });
 
-// ✅ INVEST
+// INVEST
 app.get("/invest", (req, res) => {
   const user = req.query.user;
   const amount = parseInt(req.query.amount);
@@ -51,12 +50,12 @@ app.get("/invest", (req, res) => {
   users[user].balance += amount;
 
   res.json({
-    message: Invested ₹${amount},
+    message: "Invested " + amount,
     balance: users[user].balance
   });
 });
 
-// ✅ DAILY EARN
+// DAILY EARN
 app.get("/earn", (req, res) => {
   const user = req.query.user;
 
@@ -66,7 +65,6 @@ app.get("/earn", (req, res) => {
 
   const today = new Date().toDateString();
 
-  // 🔥 Daily restriction
   if (users[user].lastEarn === today) {
     return res.json({ error: "Already earned today" });
   }
@@ -75,12 +73,12 @@ app.get("/earn", (req, res) => {
   users[user].lastEarn = today;
 
   res.json({
-    message: "₹100 Daily Earn Added",
+    message: "100 Daily Earn Added",
     balance: users[user].balance
   });
 });
 
-// ✅ WITHDRAW
+// WITHDRAW
 app.get("/withdraw", (req, res) => {
   const user = req.query.user;
 
@@ -88,19 +86,13 @@ app.get("/withdraw", (req, res) => {
     return res.json({ error: "User not found" });
   }
 
-  if (users[user].balance <= 0) {
-    return res.json({ error: "Insufficient balance" });
-  }
-
   users[user].balance = 0;
 
   res.json({
-    message: "Withdrawal requested",
-    balance: users[user].balance
+    message: "Withdrawal requested"
   });
 });
 
-// ✅ PORT FIX
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
