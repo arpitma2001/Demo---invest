@@ -5,9 +5,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ In-memory users
 let users = {};
 
-// REGISTER
+// ✅ REGISTER
 app.get("/register", (req, res) => {
   const user = req.query.user;
 
@@ -17,71 +18,45 @@ app.get("/register", (req, res) => {
 
   users[user] = {
     balance: 1000,
-    lastEarn: 0
+    lastEarn: ""
   };
 
-  res.json({ message: "Registered successfully" });
+  res.json({ message: "Registered successfully", balance: users[user].balance });
 });
 
-// LOGIN
-app.get("/login", (req, res) => {
+// ✅ BALANCE
+app.get("/balance", (req, res) => {
   const user = req.query.user;
 
   if (!users[user]) {
     return res.json({ error: "User not found" });
   }
 
-  res.json({ message: "Login successful" });
-});
-
-// BALANCE
-app.get("/balance", (req, res) => {
-  const user = req.query.user;
-
-  if (!users[user]) return res.json({ error: "User not found" });
-
   res.json({ balance: users[user].balance });
 });
 
-// DAILY EARN
-app.get("/earn", (req, res) => {
-  const user = req.query.user;
-
-  if (!users[user]) return res.json({ error: "User not found" });
-
-  const now = Date.now();
-
-  if (now - users[user].lastEarn < 86400000) {
-    return res.json({ error: "Already earned today" });
-  }
-
-  let earning = users[user].balance * 0.02;
-  users[user].balance += earning;
-  users[user].lastEarn = now;
-
-  res.json({ earning, balance: users[user].balance });
-});
-
-// INVEST
+// ✅ INVEST
 app.get("/invest", (req, res) => {
   const user = req.query.user;
   const amount = parseInt(req.query.amount);
 
-  if (!users[user]) return res.json({ error: "User not found" });
+  if (!users[user]) {
+    return res.json({ error: "User not found" });
+  }
+
+  if (!amount || amount <= 0) {
+    return res.json({ error: "Invalid amount" });
+  }
 
   users[user].balance += amount;
 
-  res.json({ balance: users[user].balance });
+  res.json({
+    message: Invested ₹${amount},
+    balance: users[user].balance
+  });
 });
 
-// WITHDRAW
-app.get("/withdraw", (req, res) => {
-  const user = req.query.user;
-
-  if (!users[user]) return res.json({ error: "User not found" });
-
-  res.json({ message: "Withdrawal requested" });
-});
+// ✅ DAILY EARN
 app.get("/earn", (req, res) => {
   const user = req.query.user;
 
@@ -89,14 +64,43 @@ app.get("/earn", (req, res) => {
     return res.json({ error: "User not found" });
   }
 
+  const today = new Date().toDateString();
+
+  // 🔥 Daily restriction
+  if (users[user].lastEarn === today) {
+    return res.json({ error: "Already earned today" });
+  }
+
   users[user].balance += 100;
+  users[user].lastEarn = today;
 
   res.json({
     message: "₹100 Daily Earn Added",
     balance: users[user].balance
   });
 });
-// PORT FIX
+
+// ✅ WITHDRAW
+app.get("/withdraw", (req, res) => {
+  const user = req.query.user;
+
+  if (!users[user]) {
+    return res.json({ error: "User not found" });
+  }
+
+  if (users[user].balance <= 0) {
+    return res.json({ error: "Insufficient balance" });
+  }
+
+  users[user].balance = 0;
+
+  res.json({
+    message: "Withdrawal requested",
+    balance: users[user].balance
+  });
+});
+
+// ✅ PORT FIX
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
