@@ -1,16 +1,16 @@
-const express = require("express");
-const cors = require("cors");
+let balance = 1000;
 
-const app = express();
-
-app.use(cors());
-
-app.get("/", (req, res) => {
-  res.send("Demo backend running 🚀");
+app.get("/balance", (req, res) => {
+  res.json({ balance });
 });
 
-const PORT = process.env.PORT || 5000;
+app.get("/earn", (req, res) => {
+  let earning = balance * 0.02; // 2% simulation
+  balance += earning;
 
-app.listen(PORT, () => {
-  console.log("Server started on port " + PORT);
+  res.json({ earning, balance });
+});
+
+app.get("/withdraw", (req, res) => {
+  res.json({ message: "Withdrawal requested" });
 });
