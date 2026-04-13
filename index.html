@@ -1,89 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Earn App</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-    }
-
-    .card {
-      background: #1e293b;
-      padding: 20px;
-      margin: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,255,0,0.2);
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      background: #22c55e;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>💰 Earn Dashboard</h1>
-
-<div class="card">
-  <h2>Balance: ₹<span id="balance">0</span></h2>
-</div>
-
-<div class="card">
-  <button onclick="getBalance()">Check Balance</button>
-  <button onclick="earn()">Daily Earn</button>
-  <button onclick="withdraw()">Withdraw</button>
-</div>
-
-<div class="card">
-  <h3>Investment Plans</h3>
-  <button onclick="invest(1000)">Invest ₹1000</button>
-  <button onclick="invest(5000)">Invest ₹5000</button>
-</div>
-
-<script>
-const API = "https://demo-invest.onrender.com";
-
-async function getBalance() {
-  let res = await fetch(API + "/balance");
-  let data = await res.json();
-  document.getElementById("balance").innerText = data.balance;
-}
-
-async function earn() {
-  let res = await fetch(API + "/earn");
-  let data = await res.json();
-
-  if(data.error){
-    alert(data.error);
-  } else {
-    alert("Earned ₹" + data.earning);
-  }
-
-  getBalance();
-}
-
 async function invest(amount) {
-  await fetch(API + "/invest?amount=" + amount);
-  alert("Invested ₹" + amount);
-  getBalance();
-}
+  const res = await fetch(/invest?user=${user}&amount=${amount});
+  const data = await res.json();
 
-async function withdraw() {
-  let res = await fetch(API + "/withdraw");
-  let data = await res.json();
   alert(data.message);
-}
-</script>
 
-</body>
-</html>
+  // 🔥 ye important hai
+  checkBalance();
+}
