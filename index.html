@@ -2,39 +2,86 @@
 <html>
 <head>
   <title>Earn App</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      margin: 50px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #22c55e;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #16a34a;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Balance: ₹0</h2>
+<div class="card">
+  <h2 id="balance">Balance: ₹0</h2>
 
-<button onclick="checkBalance()">Check Balance</button>
-<button onclick="invest(1000)">Invest ₹1000</button>
-<button onclick="invest(5000)">Invest ₹5000</button>
+  <button onclick="checkBalance()">Check Balance</button>
+  <button onclick="dailyEarn()">Daily Earn</button>
+  <button onclick="withdraw()">Withdraw</button>
 
-<!-- 🔥 SCRIPT HAMESHA BODY KE END ME -->
+  <h3>Investment Plans</h3>
+  <button onclick="invest(1000)">Invest ₹1000</button>
+  <button onclick="invest(5000)">Invest ₹5000</button>
+</div>
+
 <script>
-const user = "arpit";
+const user = prompt("Enter username");
 
-// ✅ balance function
+// balance
 async function checkBalance() {
   const res = await fetch("https://demo-invest.onrender.com/balance?user=" + user);
   const data = await res.json();
-  document.querySelector("h2").innerText = "Balance: ₹" + data.balance;
+  document.getElementById("balance").innerText = "Balance: ₹" + data.balance;
 }
 
-// ✅ invest function
+// invest
 async function invest(amount) {
   const res = await fetch("https://demo-invest.onrender.com/invest?user=" + user + "&amount=" + amount);
   const data = await res.json();
-
   alert(data.message);
-
-  // 🔥 update balance
   checkBalance();
 }
 
-// ✅ auto load balance
+// daily earn
+async function dailyEarn() {
+  const res = await fetch("https://demo-invest.onrender.com/earn?user=" + user);
+  const data = await res.json();
+  alert(data.message);
+  checkBalance();
+}
+
+// withdraw
+async function withdraw() {
+  const res = await fetch("https://demo-invest.onrender.com/withdraw?user=" + user);
+  const data = await res.json();
+  alert(data.message);
+  checkBalance();
+}
+
 window.onload = function() {
   checkBalance();
 }
