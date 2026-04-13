@@ -82,7 +82,20 @@ app.get("/withdraw", (req, res) => {
 
   res.json({ message: "Withdrawal requested" });
 });
+app.get("/earn", (req, res) => {
+  const user = req.query.user;
 
+  if (!users[user]) {
+    return res.json({ error: "User not found" });
+  }
+
+  users[user].balance += 100;
+
+  res.json({
+    message: "₹100 Daily Earn Added",
+    balance: users[user].balance
+  });
+});
 // PORT FIX
 const PORT = process.env.PORT || 5000;
 
